@@ -1,9 +1,11 @@
 pub mod util;
+// Day modules
+pub mod day1;
 
 use clap::{Arg, Command};
 use std::time::{Instant};
 
-const MAXDAY:usize = 0;
+const MAXDAY:usize = 1;
 
 fn main() {
     
@@ -43,13 +45,13 @@ fn main() {
             input_path = format!("./data/day{}/input.txt", day);
         }
     }
-    
-    println!(r#"   ___     __              __         ___  _____        __      _  ___  ____
+    println!(r#"
+   ___     __              __         ___  _____        __      _  ___  ____
   / _ |___/ /  _____ ___  / /_  ___  / _/ / ___/__  ___/ /__   ( )|_  |/ __/
  / __ / _  / |/ / -_) _ \/ __/ / _ \/ _/ / /__/ _ \/ _  / -_)  |// __//__ \ 
 /_/ |_\_,_/|___/\__/_//_/\__/  \___/_/   \___/\___/\_,_/\__/    /____/____/ "#);
     
-    println!("\nDay:\t{}\nInput:\t{}", day, input_path);
+    println!("\nDay:\t{}\nInput:\t{}\n", day, input_path);
             
     match util::read_input(&input_path) {
         Err(e) => {
@@ -59,6 +61,7 @@ fn main() {
         Ok(input_lines) => {
             let start_instant = Instant::now();
             match day {
+                1 => day1::run(&input_lines),
                 _ => { println!("Day {} not matched", day)}
             }
             println!("\nTotal execution time: {:?}", start_instant.elapsed());

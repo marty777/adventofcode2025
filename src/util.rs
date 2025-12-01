@@ -5,78 +5,17 @@ use std::fs::File;
 use std::io::{BufReader, BufRead};
 use regex::Regex;
 
-// General helper functions
-
-// File input
-/// Read an input file into lines
-pub fn read_input(file_path:&str) -> Result<Vec<String>, String>{
-    match File::open(file_path) {
-        Err(_) => Err(format!("Unable to open file at path {}", file_path)),
-        Ok(file) => {
-            let mut vec:Vec<String> = Vec::new();
-            let reader = BufReader::new(file);
-            for (_index, line) in reader.lines().enumerate() {
-                let line = line.unwrap(); // Ignore errors.
-                vec.push(line);
-            }
-	        return Ok(vec);
-        }
-    }
-}
-/// Break input lines into sections on empty lines
-pub fn sections(lines:&Vec<String>) -> Vec<Vec<String>> {
-    let mut sections:Vec<Vec<String>> = Vec::new();
-    sections.push(Vec::new());
-    let mut section_count = 1;
-    for i in 0..lines.len() {
-        if lines[i].len() == 0 {
-            sections.push(Vec::new());
-            section_count += 1;
-        }
-        else {
-            sections[section_count - 1].push(lines[i].clone());
-        }
-    }
-    return sections;
-}
-
-/// Extract all base 10 integers in a string
-pub fn ints_in_string(string:&String) -> Vec<isize> {
-    let re = Regex::new(r"-?\d+\.?\d*").unwrap();
-    let string_matches: Vec<&str> = re.find_iter(string).map(|m| m.as_str()).collect();
-    let mut result:Vec<isize> = Vec::new();
-    for s in string_matches {
-        match s.parse::<isize>() {
-            Ok(x) => result.push(x),
-            _ => {}
-        }
-    }
-    return result;
-}
-
-/// Extract all base 10 floats in a string (integers will be parsed as floats)
-pub fn floats_in_string(string:&String) -> Vec<f64> {
-    let re = Regex::new(r"-?\d+\.?\d*").unwrap();
-    let string_matches: Vec<&str> = re.find_iter(string).map(|m| m.as_str()).collect();
-    let mut result:Vec<f64> = Vec::new();
-    for s in string_matches {
-        match s.parse::<f64>() {
-            Ok(x) => result.push(x),
-            _ => {}
-        }
-    }
-    return result;
-}
-
-/// Default dict equivalent with keys of type `T` and values of type `U` 
+// Utility types
+/// Generic defaultdict equivalent with keys of type `T` and values of type `U` 
 pub struct DefaultHashMap<T,U> {
     map:HashMap<T,U>,
     default:U
 }
-impl<T: Eq + Hash,U> DefaultHashMap<T,U> {
+impl<T: Eq + Hash + Copy,U: Copy> DefaultHashMap<T,U> {
     pub fn new(default:U) -> DefaultHashMap<T,U> {
         return DefaultHashMap { map:HashMap::<T,U>::new(), default };
     }
+    /// Insert or update the `val` for the given `key` 
     pub fn insert(&mut self, key:T, val:U) -> Option<U> {
         return self.map.insert(key, val);
     }
@@ -91,20 +30,20 @@ impl<T: Eq + Hash,U> DefaultHashMap<T,U> {
             return &self.default;
         }
     }
-    pub fn get_mut(&mut self, key:&T) -> Option<&mut U> {
+    /// Returns a mutable reference to the value for a given `key`. If the 
+    /// entry does not already exist, one is created with the `default` value.
+    pub fn get_mut(&mut self, key:&T) -> &mut U {
         if self.map.contains_key(key) {
-            return Some(self.map.get_mut(key).unwrap());
+            return self.map.get_mut(key).unwrap();
         }
         else {
-            return None;
+            self.insert(*key, self.default);
+            return self.map.get_mut(key).unwrap();
         }
     }
 }
-
-// 2D, 3D vectors
-
 /// 2D Vector struct
-#[derive(Eq, PartialEq, Hash)]
+#[derive(Eq, PartialEq, Hash, Copy, Clone)]
 pub struct Vec2 {
     pub x:isize,
     pub y:isize
@@ -116,7 +55,8 @@ impl Vec2 {
     pub fn newu(x:usize, y:usize) -> Vec2 {
         return Vec2{x:x as isize, y:y as isize};
     }
-    /// Tests if the coordinate is within the bounds of a zero-based rectange with dimensions `dim_x`, `dim_y`.
+    /// Tests if the coordinate is within the bounds of a zero-based rectangle 
+    /// with dimensions `dim_x`, `dim_y`.
     pub fn in_bounds(self, dim_x:usize, dim_y:usize) -> bool {
         return self.x >= 0 && self.x < dim_x as isize && self.y >= 0 && self.y < dim_y as isize;
     }
@@ -139,6 +79,7 @@ impl std::ops::Mul<isize> for Vec2 {
     }
 }
 /// 3D vector struct
+#[derive(Eq, PartialEq, Hash, Copy, Clone)]
 pub struct Vec3 {
     pub x:isize,
     pub y:isize,
@@ -151,7 +92,8 @@ impl Vec3 {
     pub fn newu(x:usize, y:usize, z:usize) -> Vec3 {
         return Vec3{x:x as isize, y:y as isize, z:z as isize};
     }
-    /// Tests if the coordinate is within the bounds of a zero-based rectange with dimensions `dim_x`, `dim_y`, `dim_z`.
+    /// Tests if the coordinate is within the bounds of a zero-based volume 
+    /// with dimensions `dim_x`, `dim_y`, `dim_z`.
     pub fn in_bounds(self, dim_x:usize, dim_y:usize, dim_z:usize) -> bool {
         return self.x >= 0 && self.x < dim_x as isize && self.y >= 0 && self.y < dim_y as isize && self.z >= 0 && self.z < dim_z as isize;
     }
@@ -173,9 +115,66 @@ impl std::ops::Mul<isize> for Vec3 {
         return Vec3{x:self.x * rhs, y:self.y * rhs, z:self.z * rhs};
     }
 }
-
+// General helper functions
+// File input
+/// Read an input file into lines
+pub fn read_input(file_path:&str) -> Result<Vec<String>, String>{
+    match File::open(file_path) {
+        Err(_) => Err(format!("Unable to open file at path {}", file_path)),
+        Ok(file) => {
+            let mut vec:Vec<String> = Vec::new();
+            let reader = BufReader::new(file);
+            for (_index, line) in reader.lines().enumerate() {
+                let line = line.unwrap();
+                vec.push(line);
+            }
+	        return Ok(vec);
+        }
+    }
+}
+/// Break input lines into sections on empty lines
+pub fn sections(lines:&Vec<String>) -> Vec<Vec<String>> {
+    let mut sections:Vec<Vec<String>> = Vec::new();
+    sections.push(Vec::new());
+    let mut section_count = 1;
+    for i in 0..lines.len() {
+        if lines[i].len() == 0 {
+            sections.push(Vec::new());
+            section_count += 1;
+        }
+        else {
+            sections[section_count - 1].push(lines[i].clone());
+        }
+    }
+    return sections;
+}
+/// Extract all base 10 integers in a string
+pub fn ints_in_string(string:&String) -> Vec<isize> {
+    let re = Regex::new(r"-?\d+\.?\d*").unwrap();
+    let string_matches: Vec<&str> = re.find_iter(string).map(|m| m.as_str()).collect();
+    let mut result:Vec<isize> = Vec::new();
+    for s in string_matches {
+        match s.parse::<isize>() {
+            Ok(x) => result.push(x),
+            _ => {}
+        }
+    }
+    return result;
+}
+/// Extract all base 10 floats in a string (integers will be parsed as floats)
+pub fn floats_in_string(string:&String) -> Vec<f64> {
+    let re = Regex::new(r"-?\d+\.?\d*").unwrap();
+    let string_matches: Vec<&str> = re.find_iter(string).map(|m| m.as_str()).collect();
+    let mut result:Vec<f64> = Vec::new();
+    for s in string_matches {
+        match s.parse::<f64>() {
+            Ok(x) => result.push(x),
+            _ => {}
+        }
+    }
+    return result;
+}
 // 2D grid functions
-
 /// Reads a grid as a 2D vector of `char`s
 pub fn read_grid(lines:&Vec<String>) -> Vec<Vec<char>> {
     let mut grid:Vec<Vec<char>> = Vec::new();
@@ -187,8 +186,16 @@ pub fn read_grid(lines:&Vec<String>) -> Vec<Vec<char>> {
     }
     return grid;
 }
-
-/// Returns the grid as a DefaultHashMap, plus the grid width and height
+/// Print a 2D vector grid
+pub fn print_grid(grid:&Vec<Vec<char>>) {
+    for y in 0..grid.len() {
+        for x in 0..grid[y].len() {
+            print!("{} ", grid[y][x]);
+        }
+        println!();
+    }
+}
+/// Reads the grid as a DefaultHashMap, plus the grid width and height
 pub fn read_grid_map(lines:&Vec<String>, default_char:char) -> Result<(DefaultHashMap<Vec2, char>, usize, usize), String> {
     let mut map = DefaultHashMap::<Vec2, char>::new(default_char);
     if lines.len() == 0 {
@@ -202,12 +209,23 @@ pub fn read_grid_map(lines:&Vec<String>, default_char:char) -> Result<(DefaultHa
         }
         let line_chars:Vec<char> = lines[y].chars().collect();
         for x in 0..width {
-            map.insert(Vec2::newu(x,y), line_chars[x]);
+            if line_chars[x] != default_char {
+                map.insert(Vec2::newu(x,y), line_chars[x]);
+            }
         }
     }
     return Ok((map, width, height));
 }
-
+/// Print a DefaultHashMap grid
+pub fn print_grid_map(grid_map:&DefaultHashMap<Vec2, char>, width:usize, height:usize) {
+    for y in 0..height {
+        for x in 0..width + 10 {
+            let coord = Vec2::newu(x,y);
+            print!("{}", grid_map.get(&coord));
+        }
+        println!();
+    }
+}
 /// Delta vectors to orthogonally adjacent coords N,E,S,W
 pub fn adjacent4() -> Vec<Vec2> {
     return vec![Vec2::new(0,-1), Vec2::new(1,0), Vec2::new(0,1), Vec2::new(-1,0)];
@@ -220,7 +238,8 @@ pub fn adjacent5() -> Vec<Vec2> {
 pub fn adjacent8() -> Vec<Vec2> {
     return vec![Vec2::new(0,-1), Vec2::new(1,-1), Vec2::new(1,0), Vec2::new(1,1), Vec2::new(0,1), Vec2::new(-1,1), Vec2::new(-1,0), Vec2::new(-1,-1)];
 }
-/// Delta vectors to adjacent coords including diagonals N,NE,E,SE,S,SW,W,NW + self
+/// Delta vectors to adjacent coords including diagonals 
+/// N,NE,E,SE,S,SW,W,NW + self
 pub fn adjacent9() -> Vec<Vec2> {
     return vec![Vec2::new(0,-1), Vec2::new(1,-1), Vec2::new(1,0), Vec2::new(1,1), Vec2::new(0,1), Vec2::new(-1,1), Vec2::new(-1,0), Vec2::new(-1,-1), Vec2::new(0,0)];
 }
@@ -228,9 +247,16 @@ pub fn adjacent9() -> Vec<Vec2> {
 pub fn arrow_dirs() -> HashMap<char, Vec2> {
     return HashMap::<char, Vec2>::from([('^', Vec2::new(0,-1)), ('>', Vec2::new(1,0)), ('v', Vec2::new(0,1)), ('<', Vec2::new(-1,0))]);
 }
-
-// Math - using i128s for most parameters. May revise if it causes performance difficulties.
-
+// Math functions - using i128s for most parameters. May revise if it causes performance 
+// difficulties.
+/// Return `a` modulo `m`, but with the result always non-negative
+pub fn abs_mod(a:i128, m:usize) -> i128 {
+    let mut result = a % m as i128;
+    if result < 0 {
+        result += m as i128;
+    } 
+    return result;
+}
 /// Basic Sieve of Eratosthenes. Returns all integers less than `limit` and 
 /// greater than 1 that are prime (more or less, no extraordinary measures 
 /// regarding scale)
@@ -265,14 +291,16 @@ pub fn eratosthenes(limit:i128) -> Vec<i128> {
     }
     return primes;
 }
-/// Return the digits of `x` in base `n` read left to right, optionally padded to `required_len`
+/// Return the digits of `x` in base `n` read left to right, optionally padded 
+/// to `required_len`
 pub fn base_n_digits(x:i128, n:usize, required_len:Option<usize>) -> Vec<i128> {
     let mut digits = Vec::new();
     let mut x_temp = x;
     while x_temp > 0 {
         // prepend next most significant digit
-        digits.insert(0, x_temp % (n as i128));
-        x_temp -= x % (n as i128);
+        let digit = x_temp % (n as i128);
+        digits.insert(0, digit);
+        x_temp -= digit;
         x_temp /= n as i128;
     }
     match required_len {
@@ -315,7 +343,7 @@ pub fn extended_gcd(a:i128, b:i128) -> (i128, i128, i128) {
         return (gcd, y - (b/a) * x, x);
     }
 }
-/// Construct `x`^`n` % `p`
+/// Construct `x`^`n` % `m`
 pub fn mod_exp(x:i128 , n:i128 , m:i128) -> i128{
     if n <= 0 { 
         return 1; 
