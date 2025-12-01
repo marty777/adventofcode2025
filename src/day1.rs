@@ -1,6 +1,5 @@
 
 use crate::util;
-use std::time::Instant;
 
 /// Print the solutions to day 1 for the given input `lines`
 pub fn run(lines:&Vec<String>) {
