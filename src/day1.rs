@@ -1,18 +1,19 @@
 
 use crate::util;
+use std::time::Instant;
 
 /// Print the solutions to day 1 for the given input `lines`
 pub fn run(lines:&Vec<String>) {
     let mut pos = 50;
     let mut part1 = 0;
     let mut part2 = 0;
-    for line in lines {
-        let prefix = line.chars().nth(0).unwrap();
-        let number = util::ints_in_string(line)[0] as i128;
+    for i in 0..lines.len() {
+        let (prefix, num_str) = lines[i].split_at(1);
+        let number = num_str.parse::<i128>().unwrap();
         // For the positive direction, the number of times the zero is crossed 
         // is simple division to complement the modular remainder for the 
         // dial position.
-        if prefix == 'R' {
+        if prefix == "R" {
             part2 += (pos + number) / 100;
             pos = (pos + number) % 100;
         }

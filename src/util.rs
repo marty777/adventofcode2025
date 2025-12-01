@@ -161,6 +161,25 @@ pub fn ints_in_string(string:&String) -> Vec<isize> {
     }
     return result;
 }
+/// Extract all base 10 integers from a list of strings. Performs better than 
+/// the single string version due to the relative slowness of compiling a 
+/// `Regex`
+pub fn ints_in_strings(strings:&Vec<String>) -> Vec<Vec<isize>> {
+    let re = Regex::new(r"-?\d+\.?\d*").unwrap();
+    let mut result = Vec::new();
+    for string in strings {
+        let string_matches: Vec<&str> = re.find_iter(string).map(|m| m.as_str()).collect();
+        let mut ints:Vec<isize> = Vec::new();
+        for s in string_matches {
+            match s.parse::<isize>() {
+                Ok(x) => ints.push(x),
+                _ => {}
+            }
+        }
+        result.push(ints);
+    }
+    return result;
+}
 /// Extract all base 10 floats in a string (integers will be parsed as floats)
 pub fn floats_in_string(string:&String) -> Vec<f64> {
     let re = Regex::new(r"-?\d+\.?\d*").unwrap();
@@ -171,6 +190,25 @@ pub fn floats_in_string(string:&String) -> Vec<f64> {
             Ok(x) => result.push(x),
             _ => {}
         }
+    }
+    return result;
+}
+/// Extract all base 10 floats from a list of strings. Performs better than 
+/// the single string version due to the relative slowness of compiling a 
+/// `Regex`
+pub fn floats_in_strings(strings:&Vec<String>) -> Vec<Vec<f64>> {
+    let re = Regex::new(r"-?\d+\.?\d*").unwrap();
+    let mut result = Vec::new();
+    for string in strings {
+        let string_matches: Vec<&str> = re.find_iter(string).map(|m| m.as_str()).collect();
+        let mut floats:Vec<f64> = Vec::new();
+        for s in string_matches {
+            match s.parse::<f64>() {
+                Ok(x) => floats.push(x),
+                _ => {}
+            }
+        }
+        result.push(floats);
     }
     return result;
 }
