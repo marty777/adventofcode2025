@@ -195,7 +195,7 @@ pub fn print_grid(grid:&Vec<Vec<char>>) {
         println!();
     }
 }
-/// Reads the grid as a DefaultHashMap, plus the grid width and height
+/// Reads the grid as a `DefaultHashMap`, plus the grid width and height
 pub fn read_grid_map(lines:&Vec<String>, default_char:char) -> Result<(DefaultHashMap<Vec2, char>, usize, usize), String> {
     let mut map = DefaultHashMap::<Vec2, char>::new(default_char);
     if lines.len() == 0 {
@@ -219,7 +219,7 @@ pub fn read_grid_map(lines:&Vec<String>, default_char:char) -> Result<(DefaultHa
 /// Print a DefaultHashMap grid
 pub fn print_grid_map(grid_map:&DefaultHashMap<Vec2, char>, width:usize, height:usize) {
     for y in 0..height {
-        for x in 0..width + 10 {
+        for x in 0..width {
             let coord = Vec2::newu(x,y);
             print!("{}", grid_map.get(&coord));
         }
