@@ -285,8 +285,8 @@ pub fn adjacent9() -> Vec<Vec2> {
 pub fn arrow_dirs() -> HashMap<char, Vec2> {
     return HashMap::<char, Vec2>::from([('^', Vec2::new(0,-1)), ('>', Vec2::new(1,0)), ('v', Vec2::new(0,1)), ('<', Vec2::new(-1,0))]);
 }
-// Math functions - using i128s for most parameters. May revise if it causes performance 
-// difficulties.
+// Math functions - using i128s for most parameters. May revise if it causes 
+/// performance difficulties.
 /// Return `a` modulo `m`, but with the result always non-negative
 pub fn abs_mod(a:i128, m:usize) -> i128 {
     let mut result = a % m as i128;
@@ -423,7 +423,7 @@ pub fn lcm(a:i128, b:i128) -> i128 {
 }
 /// Calculate a remainder satisfying all given `congruences` (having pairwise 
 /// coprime moduli) using the Chinese Remainder Theorem. Congruences are passed
-/// as a tuples of (modulus, remainder)
+/// as tuples of (modulus, remainder)
 pub fn crt(congruences:&Vec<(i128, i128)>) -> Option<i128> {
     // require all moduli to be pairwise coprime
     for i in 0..congruences.len() {
