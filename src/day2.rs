@@ -3,6 +3,9 @@ use crate::util;
 /// Validate the given `id` against the part 1 or part 2 rules
 fn valid(id:usize, part1:bool) -> bool {
     let digits = util::base_n_digits(id as i128, 10, None);
+    if part1 && digits.len() % 2 != 0 {
+        return true;
+    }
     for window in (1..=digits.len() / 2).rev() {
         if digits.len() % window == 0 {
             let repeats = digits.len() / window;
