@@ -4,7 +4,7 @@ use crate::util;
 /// Print the solutions to day 4 for the given input `lines`
 pub fn run(lines:&Vec<String>) {
     let part1;
-    // Load the grid as a HashMap
+    // Load the grid as a DefaultHashMap
     let (grid, width, height) = util::read_grid_map(lines, '.').unwrap();
     let mut removed_rolls:HashSet<util::Vec2> = HashSet::new();
     // Iterate each non-default position, counting neighbors of each roll and 
@@ -13,7 +13,8 @@ pub fn run(lines:&Vec<String>) {
         let mut neighbor_count = 0;
         for dir in util::adjacent8() {
             let neighbor = *pos + dir;
-            if neighbor.in_bounds(width, height) && *grid.get(&neighbor) == '@' {
+            if neighbor.in_bounds(width, height) 
+                && *grid.get(&neighbor) == '@' {
                 neighbor_count += 1;
             }
         }
@@ -23,7 +24,7 @@ pub fn run(lines:&Vec<String>) {
     }
     part1 = removed_rolls.len();
     // Continue to iterate over rolls, marking newly removable ones as 
-    // removable. Stop when no more new removable rolls are found.
+    // removed. Stop when no more new removable rolls are found.
     loop {
         let mut removed = 0;
         for pos in grid.keys() {
@@ -33,8 +34,9 @@ pub fn run(lines:&Vec<String>) {
             let mut neighbor_count = 0;
             for dir in util::adjacent8() {
                 let neighbor = *pos + dir;
+                // Count the neighbor if it's a roll and it hasn't been 
+                // previously removed
                 if neighbor.in_bounds(width, height) 
-                    && grid.contains_key(&neighbor) 
                     && *grid.get(&neighbor) == '@' 
                     && !removed_rolls.contains(&neighbor) {
                     neighbor_count += 1;
