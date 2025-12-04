@@ -1,12 +1,11 @@
 use std::collections::HashSet;
-
 use crate::util;
 
 /// Print the solutions to day 4 for the given input `lines`
 pub fn run(lines:&Vec<String>) {
     let part1;
     // Load the grid as a HashMap
-    let (mut grid, width, height) = util::read_grid_map(lines, '.').unwrap();
+    let (grid, width, height) = util::read_grid_map(lines, '.').unwrap();
     let mut removed_rolls:HashSet<util::Vec2> = HashSet::new();
     // Iterate each non-default position, counting neighbors of each roll and 
     // marking them as removed if removable.
