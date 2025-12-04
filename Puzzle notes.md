@@ -37,5 +37,15 @@ Code file: [day3.rs](./src/day3.rs)
 <details>
 <summary>Discussion</summary>
 
-For part 2, it becomes apparent that a tree search of some kind will be needed to find the greatest joltage from the available batteries. Since each input line has 100 digits, a naive tree search would have a worst case $\binom{100}{12} = \frac{100!}{12!(100-12)!}$ selections to examine. After some thought, it's apparent that each digit selection in the sequence should be the left-most highest digit that still permits remaining digits to be selected. This heuristic is so effective on the inputs that search effectively doesn't need to branch.
+For part 2, it looked like a tree search would be needed to find the greatest joltage from the available batteries. Since each input line has 100 digits, a naive tree search would have a worst case $\binom{100}{12} = \frac{100!}{12!(100-12)!}$ selections to examine. After some thought, it's apparent that each digit selection in the sequence should be the left-most highest digit that still leaves space for the remaining digits to be selected. A tree search isn't necessary at all, although the recursive DSF I set up was easily adapted to a non-branching digit selection.
+</details>
+
+### [Day 4: Printing Department](https://adventofcode.com/2025/day/4)
+
+Code file: [day4.rs](./src/day4.rs)
+
+<details>
+<summary>Discussion</summary>
+
+Nothing very clever about my solution, although you can use the part 1 pass to find rolls that can be removed in a first pass on part 2 to slightly reduce the amount of work done. I found some missing methods that I needed to add to my `DefaultHashMap` struct that I'm using to read 2D grids.
 </details>

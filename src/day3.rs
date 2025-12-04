@@ -1,7 +1,8 @@
 
 /// Recurse over the digit selections for the given number of digits. At each 
 /// index position, find the largest possible leftmost number then recurse to
-/// the next digit.
+/// the next digit. This method started life as a DFS, which turns out to be
+/// unnecessary.
 pub fn battery_recurse(digits:&Vec<usize>, max_digits: usize, indices:&mut Vec<usize>, index:usize) -> Result<usize, String> {
     // If all selections have been made, compose the completed joltage
     if index == max_digits {

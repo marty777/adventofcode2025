@@ -1,5 +1,5 @@
 #[allow(dead_code)]
-use std::collections::HashMap;
+use std::collections::{HashMap, hash_map::Keys};
 use std::hash::Hash;
 use std::fs::File;
 use std::io::{BufReader, BufRead};
@@ -22,6 +22,12 @@ impl<T: Eq + Hash + Copy,U: Copy> DefaultHashMap<T,U> {
     pub fn len(&self) -> usize {
         return self.map.len();
     }
+    pub fn keys(&self) -> Keys<'_, T, U> {
+        return self.map.keys();
+    }
+    pub fn contains_key(&self, key:&T) -> bool {
+        return self.map.contains_key(key);
+    }
     pub fn get(&self, key:&T) -> &U {
         if self.map.contains_key(key) {
             return self.map.get(key).unwrap();
@@ -43,7 +49,7 @@ impl<T: Eq + Hash + Copy,U: Copy> DefaultHashMap<T,U> {
     }
 }
 /// 2D Vector struct
-#[derive(Eq, PartialEq, Hash, Copy, Clone)]
+#[derive(Eq, PartialEq, Hash, Copy, Clone, Debug)]
 pub struct Vec2 {
     pub x:isize,
     pub y:isize
@@ -79,7 +85,7 @@ impl std::ops::Mul<isize> for Vec2 {
     }
 }
 /// 3D vector struct
-#[derive(Eq, PartialEq, Hash, Copy, Clone)]
+#[derive(Eq, PartialEq, Hash, Copy, Clone, Debug)]
 pub struct Vec3 {
     pub x:isize,
     pub y:isize,
