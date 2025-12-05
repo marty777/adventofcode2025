@@ -49,3 +49,13 @@ Code file: [day4.rs](./src/day4.rs)
 
 Nothing very clever about my solution, although you can use the part 1 pass to find rolls that can be removed in a first pass on part 2 to slightly reduce the amount of work done. I found some missing methods that I needed to add to my `DefaultHashMap` struct that I'm using to read 2D grids.
 </details>
+
+### [Day 5: Cafeteria](https://adventofcode.com/2025/day/5)
+
+Code file: [day5.rs](./src/day5.rs)
+
+<details>
+<summary>Discussion</summary>
+
+I realized fairly quickly that you need to merge ranges in order to enumerate the fresh ingredient ids arithmetically for part 2, but I didn't figure out that it could take multiple passes to fully merge all the ranges. I think my conditions for handling range overlaps could probably be simplified a little, but it works.
+</details>
