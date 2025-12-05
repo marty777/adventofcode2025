@@ -37,7 +37,7 @@ Code file: [day3.rs](./src/day3.rs)
 <details>
 <summary>Discussion</summary>
 
-For part 2, it looked like a tree search would be needed to find the greatest joltage from the available batteries. Since each input line has 100 digits, a naive tree search would have a worst case $\binom{100}{12} = \frac{100!}{12!(100-12)!}$ selections to examine. After some thought, it's apparent that each digit selection in the sequence should be the left-most highest digit that still leaves space for the remaining digits to be selected. A tree search isn't necessary at all, although the recursive DSF I set up was easily adapted to a non-branching digit selection.
+For part 2, it looked like a tree search would be needed to find the greatest joltage from the available batteries. Since each input line has 100 digits, a naive tree search would have a worst case $\binom{100}{12} = \frac{100!}{12!(100-12)!}$ selections to examine. After some thought, it's apparent that each digit selection in the sequence should be the left-most highest digit that still leaves space for the remaining digits to be selected. A tree search isn't necessary at all, although the recursive DFS I set up was easily adapted to a non-branching digit selection.
 </details>
 
 ### [Day 4: Printing Department](https://adventofcode.com/2025/day/4)
