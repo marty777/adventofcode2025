@@ -67,5 +67,5 @@ Code file: [day6.rs](./src/day6.rs)
 <details>
 <summary>Discussion</summary>
 
-That was a fun exercise in lateral thinking. It occurs to me that you could easily rotate the input file and read the numbers more conventionally that way, but composing them vertically is a good exercise.
+That was a fun exercise in lateral thinking. It occurs to me that you could easily rotate the input file and read the numbers more conventionally that way, but composing them vertically is good practice.
 </details>
