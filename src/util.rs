@@ -1,5 +1,5 @@
 #[allow(dead_code)]
-use std::collections::{HashMap, hash_map::Keys};
+use std::collections::{HashMap, hash_map::Keys, hash_map::Values};
 use std::hash::Hash;
 use std::fs::File;
 use std::io::{BufReader, BufRead};
@@ -7,6 +7,7 @@ use regex::Regex;
 
 // Utility types
 /// Generic defaultdict equivalent with keys of type `T` and values of type `U` 
+#[derive(Debug)]
 pub struct DefaultHashMap<T,U> {
     map:HashMap<T,U>,
     default:U
@@ -24,6 +25,9 @@ impl<T: Eq + Hash + Copy,U: Copy> DefaultHashMap<T,U> {
     }
     pub fn keys(&self) -> Keys<'_, T, U> {
         return self.map.keys();
+    }
+    pub fn values(&self) -> Values<'_, T, U> {
+        return self.map.values();
     }
     pub fn contains_key(&self, key:&T) -> bool {
         return self.map.contains_key(key);

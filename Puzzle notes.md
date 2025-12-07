@@ -60,7 +60,7 @@ Code file: [day5.rs](./src/day5.rs)
 I realized fairly quickly that you need to merge ranges in order to enumerate the fresh ingredient ids arithmetically for part 2, but I didn't figure out that it could take multiple passes to fully merge all the ranges. I think my conditions for handling range overlaps could probably be simplified a little, but it works.
 </details>
 
-### [Day 6: Trash Compactor ](https://adventofcode.com/2025/day/6)
+### [Day 6: Trash Compactor](https://adventofcode.com/2025/day/6)
 
 Code file: [day6.rs](./src/day6.rs)
 
@@ -68,4 +68,16 @@ Code file: [day6.rs](./src/day6.rs)
 <summary>Discussion</summary>
 
 That was a fun exercise in lateral thinking. It occurs to me that you could easily rotate the input file and read the numbers more conventionally that way, but composing them vertically is good practice.
+</details>
+
+### [Day 7: Laboratories](https://adventofcode.com/2025/day/7)
+
+Code file: [day7.rs](./src/day7.rs)
+
+<details>
+<summary>Discussion</summary>
+
+My initial idea for part 2 was basically correct, but I had a weirdly hard time trying to store beam counts in a mutable `HashMap` (and then my utility `DefaultHashMap`), with a non-deterministic bug in the final beam counts. Switching to a `Vec` allocated to the width of the grid immediately worked. Odd.
+
+On reflection, you could treat the problem as a directed acyclic graph, and there are matrix multiplication methods for counting distinct paths between nodes in those, but my solution is essentially equivalent to a dynamic programming approach to the same problem.
 </details>
