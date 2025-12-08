@@ -5,7 +5,6 @@ use std::collections::HashSet;
 pub fn merge(groups:&mut Vec<HashSet<usize>>, a:usize, b:usize) {
     let mut a_group_index:Option<usize> = None;
     let mut b_group_index:Option<usize> = None;
-    
     for i in 0..groups.len() {
         if groups[i].contains(&a) {
             a_group_index = Some(i);
@@ -14,12 +13,14 @@ pub fn merge(groups:&mut Vec<HashSet<usize>>, a:usize, b:usize) {
             b_group_index = Some(i);
         }
     }
-    // If a,b are already in the same group
-    if a_group_index != None && b_group_index != None && a_group_index == b_group_index {
+    assert!(!a_group_index.is_none(), "Merge of indexes {}, {} failed. {} not found in groups", a, b, a);
+    assert!(!b_group_index.is_none(), "Merge of indexes {}, {} failed. {} not found in groups", a, b, b);
+    // If a,b are already in the same group, done
+    if a_group_index == b_group_index {
         return;
     }
-    // If a,b are in separate sets
-    else if a_group_index != None && b_group_index != None && a_group_index != b_group_index {
+    // If a,b are in separate groups, remove one group and add it to the other
+    else {
         let b_group = groups.remove(b_group_index.unwrap());
         if a_group_index.unwrap() > b_group_index.unwrap() {
             groups[a_group_index.unwrap() - 1].extend(b_group);
@@ -27,18 +28,6 @@ pub fn merge(groups:&mut Vec<HashSet<usize>>, a:usize, b:usize) {
         else {
             groups[a_group_index.unwrap()].extend(b_group);    
         }
-    }
-    // If a is in a group and b is not
-    else if a_group_index != None && b_group_index == None {
-        groups[a_group_index.unwrap()].insert(b);
-    }
-    // If b is in a group and a is not
-    else if a_group_index == None && b_group_index != None {
-        groups[b_group_index.unwrap()].insert(a);
-    }
-    else {
-        let new_group = HashSet::from([a,b]);
-        groups.push(new_group);
     }
 }
 
