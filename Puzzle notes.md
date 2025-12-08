@@ -81,3 +81,13 @@ My initial idea for part 2 was basically correct, but I had a weirdly hard time 
 
 On reflection, you could treat the problem as a directed acyclic graph, and there are matrix multiplication methods for counting distinct paths between nodes in those, but my solution is essentially equivalent to a dynamic programming approach to the same problem.
 </details>
+
+### [Day 8: Playground](https://adventofcode.com/2025/day/8)
+
+Code file: [day8.rs](./src/day8.rs)
+
+<details>
+<summary>Discussion</summary>
+
+I did get a bit confused by trying to avoid enumerating the distances between all junction box positions, anticipating that this might blow up in complexity in part 2. It didn't, and by treating each junction box as a member of a separate set, then merging sets as connections are made in order of ascending distance, the puzzle is relatively straightforward. My handling of the set merging isn't very efficient, but it works.
+</details>

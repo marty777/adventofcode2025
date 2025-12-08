@@ -107,6 +107,10 @@ impl Vec3 {
     pub fn in_bounds(self, dim_x:usize, dim_y:usize, dim_z:usize) -> bool {
         return self.x >= 0 && self.x < dim_x as isize && self.y >= 0 && self.y < dim_y as isize && self.z >= 0 && self.z < dim_z as isize;
     }
+    /// square of length of the vector
+    pub fn len_squared(self) -> isize {
+        return self.x * self.x + self.y * self.y + self.z * self.z;
+    }
 }
 impl std::fmt::Display for Vec3 {
     fn fmt(&self, f: &mut  std::fmt::Formatter) ->  std::fmt::Result {
@@ -117,6 +121,12 @@ impl std::ops::Add<Vec3> for Vec3 {
     type Output = Vec3;
     fn add(self, rhs:Vec3) -> Vec3 {
         return Vec3{x:self.x + rhs.x, y:self.y + rhs.y, z:self.z + rhs.z};
+    }
+}
+impl std::ops::Sub<Vec3> for Vec3 {
+    type Output = Vec3;
+    fn sub(self, rhs:Vec3) -> Vec3 {
+        return Vec3{x:self.x - rhs.x, y:self.y - rhs.y, z:self.z - rhs.z};
     }
 }
 impl std::ops::Mul<isize> for Vec3 {
