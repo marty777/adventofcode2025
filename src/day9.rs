@@ -12,7 +12,7 @@ fn coord_in_polygon(pos:Vec2,
                     ordered_x_coords:&Vec<isize>) -> bool {
     // If the coord is a red tile, it is in the polygon
     if red_tiles.contains(&pos) { return true; }
-    // If the coord is on horizontal perimeter segment it is in the polygon.
+    // If the coord is on a horizontal perimeter segment it is in the polygon.
     if positions_by_y.contains_key(&pos.y) {
         let min_x = positions_by_y.get(&pos.y).unwrap()[0];
         let max_x = positions_by_y.get(&pos.y).unwrap()[1];
@@ -111,7 +111,7 @@ fn perimeter_segment_in_polygon(pos1:Vec2,
             // If the line segment intersects a horizontal perimeter line 
             // segment of the polygon and doesn't start or stop at that 
             // perimeter, it leaves the polygon. 
-            if x > min_x && x < max_x && y != min_y && y != max_y{
+            if x > min_x && x < max_x && y != min_y && y != max_y {
                 return false;
             }
         }
@@ -138,9 +138,9 @@ pub fn run(lines:&Vec<String>) {
     let mut red_tiles = Vec::new();
     // Set of tile positions for quick queries
     let mut red_tiles_set = HashSet::new();
-    // Sorted lists of y coordinates of red lights index by x coordinate
+    // Sorted lists of y coordinates of red lights indexed by x coordinate
     let mut positions_by_x:HashMap<isize, Vec<isize>> = HashMap::new();
-    // Sorted lists of x coordinates of red lights index by y coordinate
+    // Sorted lists of x coordinates of red lights indexed by y coordinate
     let mut positions_by_y:HashMap<isize, Vec<isize>> = HashMap::new();
     
     // Read the input and populate the collections of tile position information
