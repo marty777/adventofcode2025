@@ -4,7 +4,8 @@ use std::collections::{HashSet,HashMap};
 use std::cmp::{min,max};
 
 /// Ray cast from left to `pos` and count crossings of polygon horizontal line
-/// segments to determine if the polygon is inside or outside the perimeter
+/// segments to determine if the coordinate is inside or outside the polygon 
+/// perimeter
 fn coord_in_polygon(pos:Vec2, 
                     red_tiles:&HashSet<Vec2>, 
                     positions_by_x:&HashMap<isize, Vec<isize>>, 
@@ -31,7 +32,7 @@ fn coord_in_polygon(pos:Vec2,
         }
         let min_y = positions_by_x.get(&x).unwrap()[0];
         let max_y = positions_by_x.get(&x).unwrap()[1];
-        // There's an issue with double counting perimeter crossings if the ray
+        // There's an issue with overcounting perimeter crossings if the ray
         // passes through a horizontal perimeter segment. Excluding either the 
         // upper or lower line segment endpoint from being counted handles that
         if y >= min_y && y < max_y {
