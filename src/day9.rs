@@ -179,9 +179,6 @@ pub fn run(lines:&Vec<String>) {
     // the greatest area contained in the polygon.
     for i in 0..red_tiles.len() {
         for j in i+1..red_tiles.len() {
-            if i == j {
-                continue;
-            }
             let area = area(&red_tiles[i], &red_tiles[j]);
             if area > part1 {
                 part1 = area;
