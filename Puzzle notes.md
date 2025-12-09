@@ -91,3 +91,15 @@ Code file: [day8.rs](./src/day8.rs)
 
 I did get a bit confused by trying to avoid enumerating the distances between all junction box positions, anticipating that this might blow up in complexity in part 2. It didn't, and by treating each junction box as a member of a separate set, then merging sets as connections are made in order of ascending distance, the puzzle is relatively straightforward. My handling of the set merging isn't very efficient, but it works.
 </details>
+
+### [Day 9: Movie Theater](https://adventofcode.com/2025/day/9)
+
+Code file: [day9.rs](./src/day9.rs)
+
+<details>
+<summary>Discussion</summary>
+
+It took quite a while to work out the bugs involving points directly on the polygon perimeter in part 2, but my approach relied on ray-casting to determine if a rectangle is contained within the polygon. For each rectangle with all four corners inside the polygon, each side can be tested to see if it's entirely within the polygon by casting a ray from one endpoint to another and checking if the ray crosses any horizontal or vertical perimeter segments of the polygon. If a rectangle has all four corners in the polygon and no sides cross the polygon perimeter, the rectangle is entirely inside the polygon.
+
+This is another puzzle where the input file is noticeably friendly, since the polygon has no two horizontal or vertical perimeter segments sharing the same row or column (at least for me). It simplifies things quite a bit and must have been difficult to set up.
+</details>

@@ -8,11 +8,12 @@ pub mod day5;
 pub mod day6;
 pub mod day7;
 pub mod day8;
+pub mod day9;
 
 use clap::{Arg, Command};
 use std::time::{Instant};
 
-const MAXDAY:usize = 8;
+const MAXDAY:usize = 9;
 
 fn main() {
     
@@ -76,6 +77,7 @@ fn main() {
                 6 => day6::run(&input_lines),
                 7 => day7::run(&input_lines),
                 8 => day8::run(&input_lines),
+                9 => day9::run(&input_lines),
                 _ => { println!("Day {} not matched", day)}
             }
             println!("\nTotal execution time: {:?}", start_instant.elapsed());
