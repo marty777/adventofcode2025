@@ -103,3 +103,17 @@ It took quite a while to work out the bugs involving points directly on the poly
 
 This is another puzzle where the input file is noticeably friendly, since the polygon has no two horizontal or vertical perimeter segments sharing the same row or column (at least for me). It simplifies things quite a bit and must have been difficult to set up.
 </details>
+
+### [Day 10: Factory](https://adventofcode.com/2025/day/10)
+
+Code file: [day10.rs](./src/day10.rs)
+
+<details>
+<summary>Discussion</summary>
+
+The puzzle obviously describes systems of linear equations, with part 1 in the field of integers modulo 2. However, because these systems have more variables than equations, they don't have exact solutions that can be quickly arrived at using traditional methods.
+
+Since the operation of each button is effectively an XOR operation with a particular mask on the indicators in part 1, the button presses are both commutative and their own inverse. This means it doesn't matter which order the buttons are pressed, and pressing any button more than once cancels out its changes to the system. The minimal number of button presses would press no button more than once and since the order of presses doesn't matter it's simple to enumerate all possible combinations of single button presses, test which ones produce the required output, and take the one with the smallest number of buttons pressed. That was my solution for part 1.
+
+For part 2 the search space is much larger and exhaustive enumeration isn't very feasible. I fell back on the [Z3 prover](https://github.com/Z3Prover/z3) to reach the solution. While there's a Z3 wrapper available in Rust, I was having issues compiling it so the part 2 solution was arrived at via a separate Python script. It would be interesting to try solving the systems more directly.
+</details>
