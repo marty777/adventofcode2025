@@ -117,3 +117,15 @@ Since the operation of each button is effectively an XOR operation with a partic
 
 For part 2 the search space is much larger and exhaustive enumeration isn't very feasible. I fell back on the [Z3 prover](https://github.com/Z3Prover/z3) to reach the solution. While there's a Z3 wrapper available in Rust, I was having issues compiling it so the part 2 solution was arrived at via a separate Python script. It would be interesting to try solving the systems more directly.
 </details>
+
+### [Day 11: Reactor](https://adventofcode.com/2025/day/11)
+
+Code file: [day11.rs](./src/day11.rs)
+
+<details>
+<summary>Discussion</summary>
+
+That's quite a good puzzle. An approach like Dijkstra's algorithm seems like a good bet because the connected devices form a directed graph, but requiring the `dac` and `fft` nodes in the path betweed `svr` and `out` makes the direct application of that a little difficult. The trick is to find the number of paths between each of the nodes in in the distinct orders they can occur (`svr` -> `dac` -> `fft` -> `out` and `svr` -> `fft` -> `dac` -> `out`) and multiply the inter-node path counts together for each ordering, then take the sum. I opted for a DFS to count the paths, which is only feasible once a memoization cache is introduced.
+
+I haven't had to deal with Rust lifetimes before, but I did when I tried to use `&str` keys in the cache for the DFS. I'm not sure my switch to a constant length character array type was the right approach, but at least it compiles.
+</details>
