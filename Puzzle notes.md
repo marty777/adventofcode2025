@@ -129,3 +129,13 @@ That's quite a good puzzle. An approach like Dijkstra's algorithm seems like a g
 
 I haven't had to deal with Rust lifetimes before, but I did when I tried to use `&str` keys in the cache for the DFS. I'm not sure my switch to a constant length character array type was the right approach, but at least it compiles.
 </details>
+
+### [Day 12: Christmas Tree Farm](https://adventofcode.com/2025/day/12)
+
+Code file: [day12.rs](./src/day12.rs)
+
+<details>
+<summary>Discussion</summary>
+
+I did think about the eventual solution within the first few minutes of seeing the puzzle, dismissed it as silly, and spend over an hour poking at the edges of much more hopeless approaches. A fun little prank to cap off the year.
+</details>

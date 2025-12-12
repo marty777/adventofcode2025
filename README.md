@@ -1,6 +1,9 @@
 # adventofcode2025
-Advent of Code 2025 in Rust
+[Advent of Code 2025](https://adventofcode.com/2025) in Rust
 
+![AoC 2025 - all stars collected](img/complete.png)
+
+Hats off to **Eric Wastl** for an excellent 12 days of puzzles!
 
 ## Usage
 
