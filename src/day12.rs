@@ -1,16 +1,15 @@
 use crate::util;
 use util::Vec2;
-use core::num;
 use std::{collections::HashSet};
 
 struct Shape {
     pub transforms:Vec<HashSet<Vec2>>,
-    pub id:usize
+    // pub id:usize
 }
 impl Shape {
     pub fn new(section:&Vec<String>) -> Shape {
-        let (id_str, _) = section[0].split_at(1);
-        let id = id_str.parse::<i128>().unwrap();
+        // let (id_str, _) = section[0].split_at(1);
+        // let id = id_str.parse::<i128>().unwrap();
         let mut base_cells = HashSet::new();
         for y in 1..section.len() {
             let chars = section[y].chars().collect::<Vec<char>>();
@@ -25,16 +24,16 @@ impl Shape {
             let mut cells = base_cells.clone();
             for reflect in 0..1 {
                 
-                for i in 0..rotate {
+                for _ in 0..rotate {
                     cells = rotate_clockwise(&cells);
                 }
-                for i in 0..reflect {
+                for _ in 0..reflect {
                     cells = reflect_x(&cells);
                 }
             }
             transforms.push(cells);
         }
-        return Shape{transforms:transforms, id:id as usize};
+        return Shape{transforms:transforms};
     }
 }
 
