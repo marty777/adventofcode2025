@@ -136,6 +136,7 @@ impl std::ops::Mul<isize> for Vec3 {
     }
 }
 
+/// Basic rational type
 #[derive(Copy, Clone)]
 pub struct Rational {
     pub num:isize,
@@ -143,17 +144,16 @@ pub struct Rational {
 }
 impl Rational {
     pub fn new(numerator:isize, denominator:isize) -> Rational {
-        assert!(denominator != 0, "Denominator of {}/{} zero", numerator, denominator);
+        assert!(denominator != 0, "{}/{} has denominator zero", numerator, denominator);
         if numerator == 0 {
             return Rational {num:0, denom:1};
         }
+        // Divide out gcd between numerator and denominator from both
         let gcd = gcd(numerator as i128, denominator as i128) as isize;
-        assert!(gcd != 0, "numerator {} denominator {} gcd 0", numerator, denominator);
         let num = numerator / gcd;
         let denom = denominator / gcd;
         // have denominator positive
         let neg = if denom < 0 {-1} else {1};
-        assert!(neg * denom != 0, "numerator {} denominator {} -> {}/{} gcd {}", numerator, denominator, num, denom, gcd);
         return Rational { num: neg * num, denom: neg * denom };
     }
     pub fn new_int(numerator:isize) -> Rational {
@@ -172,7 +172,6 @@ impl std::fmt::Display for Rational {
 impl std::ops::Neg for Rational {
     type Output = Rational;
     fn neg(self) -> Rational {
-        assert!(self.denom != 0, "Neg {} has denominator 0", self);
         return Rational::new(-self.num, self.denom);
     }
 }
@@ -181,9 +180,6 @@ impl std::ops::Add<Rational> for Rational {
     fn add(self, rhs:Rational) -> Rational {
         let numerator = (self.num * rhs.denom) + (rhs.num * self.denom);
         let denominator = self.denom * rhs.denom;
-        if denominator == 0 {
-            panic!("{} + {} has numerator {} denominator 0", self, rhs, numerator);
-        }
         return Rational::new(numerator, denominator);
     }
 }
@@ -192,9 +188,6 @@ impl std::ops::Add<isize> for Rational {
     fn add(self, rhs:isize) -> Rational {
         let numerator = self.num + (rhs * self.denom);
         let denominator = self.denom;
-        if denominator == 0 {
-            panic!("{} + {} has numerator {} denominator 0", self, rhs, numerator);
-        }
         return Rational::new(numerator, denominator);
     }
 }
@@ -203,9 +196,6 @@ impl std::ops::Sub<Rational> for Rational {
     fn sub(self, rhs:Rational) -> Rational {
         let numerator = (self.num * rhs.denom) - (rhs.num * self.denom);
         let denominator = self.denom * rhs.denom;
-        if denominator == 0 {
-            panic!("{} - {} has numerator {} denominator 0", self, rhs, numerator);
-        }
         return Rational::new(numerator, denominator);
     }
 }
@@ -214,9 +204,6 @@ impl std::ops::Sub<isize> for Rational {
     fn sub(self, rhs:isize) -> Rational {
         let numerator = self.num - (rhs * self.denom);
         let denominator = self.denom;
-        if denominator == 0 {
-            panic!("{} - {} has numerator {} denominator 0", self, rhs, numerator);
-        }
         return Rational::new(numerator, denominator);
     }
 }
@@ -225,9 +212,6 @@ impl std::ops::Mul<Rational> for Rational {
     fn mul(self, rhs:Rational) -> Rational {
         let numerator = self.num * rhs.num;
         let denominator = self.denom * rhs.denom;
-        if denominator == 0 {
-            panic!("{} * {} has numerator {} denominator 0", self, rhs, numerator);
-        }
         return Rational::new(numerator, denominator);
     }
 }
@@ -236,9 +220,6 @@ impl std::ops::Mul<isize> for Rational {
     fn mul(self, rhs:isize) -> Rational {
         let numerator = self.num * rhs;
         let denominator = self.denom;
-        if denominator == 0 {
-            panic!("{} * {} has numerator {} denominator 0", self, rhs, numerator);
-        }
         return Rational::new(numerator, denominator);
     }
 }
@@ -248,9 +229,6 @@ impl std::ops::Div<Rational> for Rational {
         assert!(rhs != 0,"Division of {} by zero", self);
         let numerator = self.num * rhs.denom;
         let denominator = self.denom * rhs.num;
-        if denominator == 0 {
-            panic!("{} / {} has numerator {} denominator 0", self, rhs, numerator);
-        }
         return Rational::new(numerator, denominator);
     }
 }
@@ -260,9 +238,6 @@ impl std::ops::Div<isize> for Rational {
         assert!(rhs != 0,"Division of {} by zero", self);
         let numerator = self.num;
         let denominator = self.denom * rhs;
-        if denominator == 0 {
-            panic!("{} / {} has numerator {} denominator 0", self, rhs, numerator);
-        }
         return Rational::new(numerator, denominator);
     }
 }
@@ -283,44 +258,37 @@ impl std::ops::AddAssign<isize> for Rational {
 impl std::ops::SubAssign<Rational> for Rational {
     fn sub_assign(&mut self, rhs: Rational) {
         let temp = *self - rhs;
-        self.num = temp.num;
-        self.denom = temp.denom;
+        *self = temp;
     }
 }
 impl std::ops::SubAssign<isize> for Rational {
     fn sub_assign(&mut self, rhs: isize) {
         let temp = *self - rhs;
-        self.num = temp.num;
-        self.denom = temp.denom;
+        *self = temp;
     }
 }
 impl std::ops::MulAssign<Rational> for Rational {
     fn mul_assign(&mut self, rhs: Rational) {
         let temp = *self * rhs;
-        self.num = temp.num;
-        self.denom = temp.denom;
+        *self = temp;
     }
 }
 impl std::ops::MulAssign<isize> for Rational {
     fn mul_assign(&mut self, rhs: isize) {
         let temp = *self * rhs;
-        self.num = temp.num;
-        self.denom = temp.denom;
+        *self = temp;
     }
 }
 impl std::ops::DivAssign<Rational> for Rational {
     fn div_assign(&mut self, rhs: Rational) {
         let temp = *self / rhs;
-        assert!(temp.denom != 0, "DivAssign {} / {} -> {}", self, rhs, temp);
-        self.num = temp.num;
-        self.denom = temp.denom;
+        *self = temp;
     }
 }
 impl std::ops::DivAssign<isize> for Rational {
     fn div_assign(&mut self, rhs: isize) {
         let temp = *self / rhs;
-        self.num = temp.num;
-        self.denom = temp.denom;
+        *self = temp;
     }
 }
 impl std::cmp::Ord for Rational {
