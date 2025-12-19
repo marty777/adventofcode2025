@@ -135,6 +135,231 @@ impl std::ops::Mul<isize> for Vec3 {
         return Vec3{x:self.x * rhs, y:self.y * rhs, z:self.z * rhs};
     }
 }
+
+#[derive(Copy, Clone)]
+pub struct Rational {
+    pub num:isize,
+    pub denom:isize
+}
+impl Rational {
+    pub fn new(numerator:isize, denominator:isize) -> Rational {
+        assert!(denominator != 0, "Denominator of {}/{} zero", numerator, denominator);
+        if numerator == 0 {
+            return Rational {num:0, denom:1};
+        }
+        let gcd = gcd(numerator as i128, denominator as i128) as isize;
+        assert!(gcd != 0, "numerator {} denominator {} gcd 0", numerator, denominator);
+        let num = numerator / gcd;
+        let denom = denominator / gcd;
+        // have denominator positive
+        let neg = if denom < 0 {-1} else {1};
+        assert!(neg * denom != 0, "numerator {} denominator {} -> {}/{} gcd {}", numerator, denominator, num, denom, gcd);
+        return Rational { num: neg * num, denom: neg * denom };
+    }
+    pub fn new_int(numerator:isize) -> Rational {
+        return Rational { num: numerator, denom: 1 };
+    }
+}
+impl std::fmt::Display for Rational {
+    fn fmt(&self, f: &mut  std::fmt::Formatter) ->  std::fmt::Result {
+        if self.denom == 1 {
+            write!(f,"{}", self.num)
+        } else {
+            write!(f,"{}/{}", self.num, self.denom)
+        }
+    }
+}
+impl std::ops::Neg for Rational {
+    type Output = Rational;
+    fn neg(self) -> Rational {
+        assert!(self.denom != 0, "Neg {} has denominator 0", self);
+        return Rational::new(-self.num, self.denom);
+    }
+}
+impl std::ops::Add<Rational> for Rational {
+    type Output = Rational;
+    fn add(self, rhs:Rational) -> Rational {
+        let numerator = (self.num * rhs.denom) + (rhs.num * self.denom);
+        let denominator = self.denom * rhs.denom;
+        if denominator == 0 {
+            panic!("{} + {} has numerator {} denominator 0", self, rhs, numerator);
+        }
+        return Rational::new(numerator, denominator);
+    }
+}
+impl std::ops::Add<isize> for Rational {
+    type Output = Rational;
+    fn add(self, rhs:isize) -> Rational {
+        let numerator = self.num + (rhs * self.denom);
+        let denominator = self.denom;
+        if denominator == 0 {
+            panic!("{} + {} has numerator {} denominator 0", self, rhs, numerator);
+        }
+        return Rational::new(numerator, denominator);
+    }
+}
+impl std::ops::Sub<Rational> for Rational {
+    type Output = Rational;
+    fn sub(self, rhs:Rational) -> Rational {
+        let numerator = (self.num * rhs.denom) - (rhs.num * self.denom);
+        let denominator = self.denom * rhs.denom;
+        if denominator == 0 {
+            panic!("{} - {} has numerator {} denominator 0", self, rhs, numerator);
+        }
+        return Rational::new(numerator, denominator);
+    }
+}
+impl std::ops::Sub<isize> for Rational {
+    type Output = Rational;
+    fn sub(self, rhs:isize) -> Rational {
+        let numerator = self.num - (rhs * self.denom);
+        let denominator = self.denom;
+        if denominator == 0 {
+            panic!("{} - {} has numerator {} denominator 0", self, rhs, numerator);
+        }
+        return Rational::new(numerator, denominator);
+    }
+}
+impl std::ops::Mul<Rational> for Rational {
+    type Output = Rational;
+    fn mul(self, rhs:Rational) -> Rational {
+        let numerator = self.num * rhs.num;
+        let denominator = self.denom * rhs.denom;
+        if denominator == 0 {
+            panic!("{} * {} has numerator {} denominator 0", self, rhs, numerator);
+        }
+        return Rational::new(numerator, denominator);
+    }
+}
+impl std::ops::Mul<isize> for Rational {
+    type Output = Rational;
+    fn mul(self, rhs:isize) -> Rational {
+        let numerator = self.num * rhs;
+        let denominator = self.denom;
+        if denominator == 0 {
+            panic!("{} * {} has numerator {} denominator 0", self, rhs, numerator);
+        }
+        return Rational::new(numerator, denominator);
+    }
+}
+impl std::ops::Div<Rational> for Rational {
+    type Output = Rational;
+    fn div(self, rhs:Rational) -> Rational {
+        assert!(rhs != 0,"Division of {} by zero", self);
+        let numerator = self.num * rhs.denom;
+        let denominator = self.denom * rhs.num;
+        if denominator == 0 {
+            panic!("{} / {} has numerator {} denominator 0", self, rhs, numerator);
+        }
+        return Rational::new(numerator, denominator);
+    }
+}
+impl std::ops::Div<isize> for Rational {
+    type Output = Rational;
+    fn div(self, rhs:isize) -> Rational {
+        assert!(rhs != 0,"Division of {} by zero", self);
+        let numerator = self.num;
+        let denominator = self.denom * rhs;
+        if denominator == 0 {
+            panic!("{} / {} has numerator {} denominator 0", self, rhs, numerator);
+        }
+        return Rational::new(numerator, denominator);
+    }
+}
+impl std::ops::AddAssign<Rational> for Rational {
+    fn add_assign(&mut self, rhs: Rational) {
+        let temp = *self + rhs;
+        self.num = temp.num;
+        self.denom = temp.denom;
+    }
+}
+impl std::ops::AddAssign<isize> for Rational {
+    fn add_assign(&mut self, rhs: isize) {
+        let temp = *self + rhs;
+        self.num = temp.num;
+        self.denom = temp.denom;
+    }
+}
+impl std::ops::SubAssign<Rational> for Rational {
+    fn sub_assign(&mut self, rhs: Rational) {
+        let temp = *self - rhs;
+        self.num = temp.num;
+        self.denom = temp.denom;
+    }
+}
+impl std::ops::SubAssign<isize> for Rational {
+    fn sub_assign(&mut self, rhs: isize) {
+        let temp = *self - rhs;
+        self.num = temp.num;
+        self.denom = temp.denom;
+    }
+}
+impl std::ops::MulAssign<Rational> for Rational {
+    fn mul_assign(&mut self, rhs: Rational) {
+        let temp = *self * rhs;
+        self.num = temp.num;
+        self.denom = temp.denom;
+    }
+}
+impl std::ops::MulAssign<isize> for Rational {
+    fn mul_assign(&mut self, rhs: isize) {
+        let temp = *self * rhs;
+        self.num = temp.num;
+        self.denom = temp.denom;
+    }
+}
+impl std::ops::DivAssign<Rational> for Rational {
+    fn div_assign(&mut self, rhs: Rational) {
+        let temp = *self / rhs;
+        assert!(temp.denom != 0, "DivAssign {} / {} -> {}", self, rhs, temp);
+        self.num = temp.num;
+        self.denom = temp.denom;
+    }
+}
+impl std::ops::DivAssign<isize> for Rational {
+    fn div_assign(&mut self, rhs: isize) {
+        let temp = *self / rhs;
+        self.num = temp.num;
+        self.denom = temp.denom;
+    }
+}
+impl std::cmp::Ord for Rational {
+    fn cmp(&self, other:&Rational) -> std::cmp::Ordering {
+        let numerator = self.num * other.denom;
+        let denominator = self.denom * other.num;
+        return numerator.cmp(&denominator);
+    }
+}
+impl Eq for Rational {}
+impl std::cmp::PartialOrd<Rational> for Rational {
+    fn partial_cmp(&self, other:&Rational) -> Option<std::cmp::Ordering> {
+        let self_numerator = self.num * other.denom;
+        let other_numerator = other.num * self.denom;
+        return Some(self_numerator.cmp(&other_numerator));
+    }
+}
+impl std::cmp::PartialEq<Rational> for Rational {
+    fn eq(&self, other:&Rational) -> bool {
+        let self_numerator = self.num * other.denom;
+        let other_numerator = other.num * self.denom;
+        return self_numerator.eq(&other_numerator);
+    }
+}
+impl std::cmp::PartialOrd<isize> for Rational {
+    fn partial_cmp(&self, other:&isize) -> Option<std::cmp::Ordering> {
+        let self_numerator = self.num;
+        let other_numerator = other * self.denom;
+        return Some(self_numerator.cmp(&other_numerator));
+    }
+}
+impl std::cmp::PartialEq<isize> for Rational {
+    fn eq(&self, other:&isize) -> bool {
+        let self_numerator = self.num;
+        let other_numerator = other* self.denom;
+        return self_numerator.eq(&other_numerator);
+    }
+}
+
 // General helper functions
 // File input
 /// Read an input file into lines
@@ -377,19 +602,24 @@ pub fn gcd(a:i128, b:i128) -> i128 {
     if a == b { 
         return a; 
     }
-    let mut a_local = a;
-    let mut b_local = b;
-    if b > a {
-        a_local = b;
-        b_local = a;
+    if b == 0 || a == 0 || b == 1 || a == 1 {
+        return 1;
     }
-    while b_local > 0 {
-        let temp = a_local;
-        a_local = b_local;
-        b_local = temp % b_local;
-    }
-    return a_local;
+    let (g,_,_) = extended_gcd(a, b);
+    return g;
 }
+
+pub fn gcd_list(vals:&Vec<i128>) -> i128{
+    if vals.len() < 2 {
+        return 1;
+    }
+    let mut result = gcd(vals[0], vals[1]);
+    for i in 2..vals.len() {
+        result = gcd(result, vals[i]);
+    }
+    return result;
+}
+
 /// Compute  (GCD(`a`,`b`), `x`, `y`) such that `ax` + `by` = GCD(`a`,`b`)
 /// via the extended Euclidean algorithm
 pub fn extended_gcd(a:i128, b:i128) -> (i128, i128, i128) {
