@@ -577,7 +577,8 @@ pub fn gcd(a:i128, b:i128) -> i128 {
     return g;
 }
 
-pub fn gcd_list(vals:&Vec<i128>) -> i128{
+/// Compute the common GCD between all elements in `vals`
+pub fn gcd_list(vals:&Vec<i128>) -> i128 {
     if vals.len() < 2 {
         return 1;
     }
