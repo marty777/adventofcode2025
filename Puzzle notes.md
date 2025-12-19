@@ -116,6 +116,8 @@ The puzzle obviously describes systems of linear equations, with part 1 in the f
 Since the operation of each button is effectively an XOR operation with a particular mask on the indicators in part 1, the button presses are both commutative and their own inverse. This means it doesn't matter which order the buttons are pressed, and pressing any button more than once cancels out its changes to the system. The minimal number of button presses would press no button more than once and since the order of presses doesn't matter it's simple to enumerate all possible combinations of single button presses, test which ones produce the required output, and take the one with the smallest number of buttons pressed. That was my solution for part 1.
 
 For part 2 the search space is much larger and exhaustive enumeration isn't very feasible. I fell back on the [Z3 prover](https://github.com/Z3Prover/z3) to reach the solution. While there's a Z3 wrapper available in Rust, I was having issues compiling it so the part 2 solution was arrived at via a separate Python script. It would be interesting to try solving the systems more directly.
+
+Update: I've implemented linear algebra approach to day 10 that attempts to get each system of equations into a row reduced form for parts 1 and 2. For systems that don't have a unique solution, all combinations of free variables up to a bound are tested to find the minimal number of button presses. It's not especially fast, but it works.
 </details>
 
 ### [Day 11: Reactor](https://adventofcode.com/2025/day/11)
