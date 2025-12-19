@@ -255,7 +255,7 @@ impl Machine {
     }
 }
 
-/// Print the part 1 solution to day 10 for the given input `lines`
+/// Print the solutions to day 10 for the given input `lines`
 pub fn run(lines:&Vec<String>) {
     let mut part1 = 0;
     let mut part2 = 0;
@@ -291,13 +291,11 @@ pub fn run(lines:&Vec<String>) {
         machines.push(machine);
     }
     for i in 0..machines.len() {
-        let part1_presses = machines[i].rref_solve(true);
-        part1 += part1_presses;
+        part1 += machines[i].rref_solve(true);
     }
     println!("Part 1: {}", part1);
     for i in 0..machines.len() {
-        let part2_presses = machines[i].rref_solve(false);
-        part2 += part2_presses;
+        part2 += machines[i].rref_solve(false);
     }
     println!("Part 2: {}", part2);
 }
